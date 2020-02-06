@@ -26,27 +26,53 @@ double precent[11];
 int readcnt[20];
 int genomecnt[11];
 
+string revcomp(string s){
+	reverse(s.begin(),s.end());
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='A')
+			s[i]='X';
+	}
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='T')
+			s[i]='A';
+	}
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='X')
+			s[i]='T';
+	}
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='C')
+			s[i]='X';
+	}
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='G')
+			s[i]='C';
+	}
+	for(int i=0;i<s.length();i++){
+		if(s[i]=='X')
+			s[i]='G';
+	}
+	return s;
+}
+
 string getMinimizer (string seq){
 	//from https://homolog.us/blogs/bioinfo/2017/10/25/intro-minimizer/
-	// rev = seq;
-	// reverse(rev.begin(),rev.end());
-
- //    rev=rev.replace("A","X")
- //    rev=rev.replace("T","A")
- //    rev=rev.replace("X","T")
- //    rev=rev.replace("C","X")
- //    rev=rev.replace("G","C")
- //    rev=rev.replace("X","G")
+	//we can xor here
+	string rev = revcomp(seq);
 
     int L=seq.length();
     string minimizer="ZZZZZZZZZZZZZ";
     for(int i=0 ; i < (L-kmerSize+1) ; i++){
         string subseq=seq.substr(i,kmerSize);
+        string subseqrev=rev.substr(i,kmerSize);
         //sub_r=rev[L-Kmer-i:L-i]
         for(int j=0; j<(kmerSize-minSize+1);j++){
         	string subseq2 = subseq.substr(j,minSize);
+        	string subseq3 = rev.substr(j,minSize);
             if(subseq2<minimizer)
-                minimizer=subseq2;         
+                minimizer=subseq2;
+            if(subseq3<minimizer)
+            	minimizer=subseq3;         
         }
  	}
     return minimizer;
@@ -121,13 +147,14 @@ void makeIndex(){
 
 }
 
-void printIndex(){
+void saveIndex(){
+	ofstream fout("index.txt");
 	map<string, map<string, int>  >::iterator it = index.begin();
 	while(it!=index.end()){
-		cout<<it->first<<endl;
+		fout<<it->first<<endl;
 		map<string, int> ::iterator it2 = it->second.begin();
 		while(it2!=it->second.end()){
-			cout<<it2->first<<" "<<it2->second<<endl;
+			fout<<it2->first<<" "<<it2->second<<endl;
 			it2++;
 		}
 		it++;
@@ -186,7 +213,6 @@ void calculateGenomePrecent(){
 	map<string, int >::iterator it = readclass.begin();
 	int sum = 0;
 	while(it!=readclass.end()){
-		sum++;
 		readcnt[it->second]++;
 		it++;
 	}
@@ -205,7 +231,7 @@ int main(){
 	//preprocess
 	buildTree();
 	makeIndex();
-	// printIndex();
+	// saveIndex();
 	readClassification();
 	calculateGenomePrecent();
 	for(int i=1;i<=10;i++){
