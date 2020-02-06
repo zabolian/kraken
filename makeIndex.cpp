@@ -5,6 +5,7 @@
 #include<set>
 #include<string>
 #include<fstream>
+#include<set>
 
 using namespace std;
 
@@ -45,7 +46,18 @@ void buildTree(){
 }
 
 int LCA(int node1, int node2){
-	return 0;
+	set<int> path;
+    int temp1 = node1;
+    int temp2 = node2;
+    path.insert(temp1);
+    while (temp1 != root){
+    	temp1 = tree[temp1].parent;
+    	path.insert(temp1);
+    }
+    while(path.find(temp2) == path.end()){
+    	temp2 = tree[temp2].parent;
+    }
+    return temp2;
 }
 
 void makeIndex(){
