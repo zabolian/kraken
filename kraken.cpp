@@ -6,6 +6,8 @@
 #include<string>
 #include<fstream>
 #include<set>
+#include<map>
+#include<algorithm>
 
 using namespace std;
 
@@ -17,7 +19,35 @@ struct node{
 node tree[20];
 int root;
 
+map<string,pair<string, int> > index;
+const int kmerSize=31, minSize=7;
 
+
+string getMinimizer (string seq){
+	//from https://homolog.us/blogs/bioinfo/2017/10/25/intro-minimizer/
+	// rev = seq;
+	// reverse(rev.begin(),rev.end());
+
+ //    rev=rev.replace("A","X")
+ //    rev=rev.replace("T","A")
+ //    rev=rev.replace("X","T")
+ //    rev=rev.replace("C","X")
+ //    rev=rev.replace("G","C")
+ //    rev=rev.replace("X","G")
+
+    int L=seq.length();
+    string minimizer="ZZZZZZZZZZZZZ";
+    for(int i=0 ; i < (L-kmerSize+1) ; i++){
+        string subseq=seq.substr(i,kmerSize);
+        //sub_r=rev[L-Kmer-i:L-i]
+        for(int j=0; j<(kmerSize-minSize+1);j++){
+        	string subseq2 = subseq.substr(j,minSize);
+            if(subseq2<minimizer)
+                minimizer=subseq2;         
+        }
+ 	}
+    return minimizer;
+}
 
 void buildTree(){
 	//leaves = 1 to 10
@@ -82,6 +112,7 @@ void makeIndex(){
 					node_number = LCA(node_number,j);
 			}
 		}
+
 	}
 
 }
