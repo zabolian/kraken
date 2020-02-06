@@ -1,3 +1,7 @@
+# big files
+fastq.txt
+output_count_in_file.txt
+
 # Prerequisites
 *.d
 
