@@ -9,9 +9,6 @@
 
 using namespace std;
 
-void readClassification(){
-
-}
 
 void makeIndex(){
 	//read k-mers of genomes (output of jellyfish)
@@ -29,8 +26,7 @@ void makeIndex(){
 int main(){
 	//preprocess
 	makeIndex();
-	readClassification();
 
-	cout<<"hello";
+	cout<<"The End!";
 	return 0;
 }
