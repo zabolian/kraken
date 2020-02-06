@@ -65,6 +65,9 @@ void makeIndex(){
 	ifstream fin("/home/mohammad/Desktop/kraken/genome/output_count_in_file.txt");
 	
 	for(int i=1;true;i++){
+		if(i % 1000000 == 0){
+			cout<<"reading "<<i<<"'s input line"<<endl;
+		}
 		string kmer;
 		if(!(fin>>kmer))
 			break;
@@ -81,11 +84,6 @@ void makeIndex(){
 		}
 	}
 
-	string s;
-	getline(fin, s);
-	cout<<s<<endl;
-	getline(fin, s);
-	cout<<s<<endl;
 }
 
 
