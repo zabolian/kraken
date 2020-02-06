@@ -223,7 +223,10 @@ void calculateGenomePrecent(){
 		sum+=readcnt[j];
 	}
 	for(int j=1;j<=10;j++){
-		precent[j]=(double)readcnt[j]/(double)sum;
+		if(sum!=0)
+			precent[j]=(double)readcnt[j]/(double)sum;
+		else
+			precent[j]=0;
 	}
 }
 
@@ -232,8 +235,11 @@ int main(){
 	buildTree();
 	makeIndex();
 	// saveIndex();
+	cerr<<"here";
 	readClassification();
+	cerr<<"here2";
 	calculateGenomePrecent();
+	cerr<<"here3";
 	for(int i=1;i<=10;i++){
 		cout<<"genome "<<i<<" precent is: "<<precent[i]<<endl;
 	}
