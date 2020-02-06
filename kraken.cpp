@@ -227,7 +227,7 @@ void calculateGenomePrecent(){
 			precent[j]=(double)readcnt[j]/(double)sum;
 		else
 			precent[j]=0;
-		cerr<<sum<< " "<<readcnt[j]<<endl;
+		//cerr<<sum<< " "<<readcnt[j]<<endl;
 	}
 }
 
@@ -238,7 +238,6 @@ int main(){
 	// saveIndex();
 	readClassification();
 	calculateGenomePrecent();
-	cerr<<"here3";
 	for(int i=1;i<=10;i++){
 		cout<<"genome "<<i<<" precent is: "<<precent[i]<<endl;
 	}
