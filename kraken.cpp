@@ -227,6 +227,7 @@ void calculateGenomePrecent(){
 			precent[j]=(double)readcnt[j]/(double)sum;
 		else
 			precent[j]=0;
+		cerr<<sum<< " "<<readcnt[j]<<endl;
 	}
 }
 
