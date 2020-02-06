@@ -19,7 +19,7 @@ struct node{
 node tree[20];
 int root;
 
-map<string,pair<string, int> > index;
+map<string, set<pair<string, int> > > index;
 const int kmerSize=31, minSize=7;
 
 
@@ -112,17 +112,28 @@ void makeIndex(){
 					node_number = LCA(node_number,j);
 			}
 		}
-
+		string tempmin = getMinimizer(kmer);
+		index[tempmin].insert(make_pair(kmer, node_number));
 	}
 
 }
 
+void printIndex(){
+	map<string, set<pair<string, int> > >::iterator it = index.begin();
+	while(it!=index.end()){
+		cout<<it->first<<endl;
+		set<pair<string, int> >::iterator it2 = it->second.begin();
+		while(it2!=it->second.end()){
+			cout<<it2->first<<" "<<it2->second<<endl;
+		}
+	}
+}
 
 int main(){
 	//preprocess
 	buildTree();
 	makeIndex();
-
+	printIndex();
 	cout<<"The End!";
 	return 0;
 }
