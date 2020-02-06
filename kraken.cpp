@@ -121,7 +121,7 @@ int LCA(int node1, int node2){
 
 void makeIndex(){
 	//read k-mers of genomes (output of jellyfish)
-	ifstream fin("/home/mohammad/Desktop/kraken/genome/output_count_in_file.txt");
+	ifstream fin("output_count_in_file.txt");
 	
 	for(int i=1;true;i++){
 		if(i % 1000000 == 0){
@@ -162,7 +162,7 @@ void saveIndex(){
 }
 
 void readClassification(){
-	ifstream fin("/home/mohammad/Desktop/kraken/genome/fastq.txt");
+	ifstream fin("fastq.txt");
 	for(int i=1;true;i++){
 		if(i % 1000000 == 0){
 			cout<<"reading reads "<<i<<"'s input line"<<endl;
@@ -216,7 +216,7 @@ void calculateGenomePrecent(){
 		readcnt[it->second]++;
 		it++;
 	}
-	for(int j=18;j>=1;j++){
+	for(int j=18;j>=1;j--){
 		readcnt[j]+=readcnt[tree[j].parent];
 	}
 	for(int j=1;j<=10;j++){
@@ -235,14 +235,12 @@ int main(){
 	buildTree();
 	makeIndex();
 	// saveIndex();
-	cerr<<"here";
 	readClassification();
-	cerr<<"here2";
 	calculateGenomePrecent();
 	cerr<<"here3";
 	for(int i=1;i<=10;i++){
 		cout<<"genome "<<i<<" precent is: "<<precent[i]<<endl;
 	}
-	cout<<"The End!";
+	cout<<"The End!"<<endl;
 	return 0;
 }
