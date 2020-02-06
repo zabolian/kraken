@@ -121,7 +121,7 @@ int LCA(int node1, int node2){
 
 void makeIndex(){
 	//read k-mers of genomes (output of jellyfish)
-	ifstream fin("output_count_in_file.txt");
+	ifstream fin("count.txt");
 	
 	for(int i=1;true;i++){
 		if(i % 1000000 == 0){
