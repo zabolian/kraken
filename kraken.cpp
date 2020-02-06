@@ -5,7 +5,6 @@
 #include<set>
 #include<string>
 #include<fstream>
-#include<makeIndex>
 
 using namespace std;
 
