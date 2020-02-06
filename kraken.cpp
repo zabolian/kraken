@@ -19,9 +19,12 @@ struct node{
 node tree[20];
 int root;
 
-map<string, set<pair<string, int> > > index;
-const int kmerSize=31, minSize=7;
-
+map<string, map<string, int> > index;
+const int kmerSize=31, minSize=7, readSize= 100;
+map<string, int> readclass;
+double precent[11];
+int readcnt[20];
+int genomecnt[11];
 
 string getMinimizer (string seq){
 	//from https://homolog.us/blogs/bioinfo/2017/10/25/intro-minimizer/
@@ -113,19 +116,88 @@ void makeIndex(){
 			}
 		}
 		string tempmin = getMinimizer(kmer);
-		index[tempmin].insert(make_pair(kmer, node_number));
+		index[tempmin][kmer]= node_number;
 	}
 
 }
 
 void printIndex(){
-	map<string, set<pair<string, int> > >::iterator it = index.begin();
+	map<string, map<string, int>  >::iterator it = index.begin();
 	while(it!=index.end()){
 		cout<<it->first<<endl;
-		set<pair<string, int> >::iterator it2 = it->second.begin();
+		map<string, int> ::iterator it2 = it->second.begin();
 		while(it2!=it->second.end()){
 			cout<<it2->first<<" "<<it2->second<<endl;
+			it2++;
 		}
+		it++;
+	}
+}
+
+void readClassification(){
+	ifstream fin("/home/mohammad/Desktop/kraken/genome/fastq.txt");
+	for(int i=1;true;i++){
+		if(i % 1000000 == 0){
+			cout<<"reading reads "<<i<<"'s input line"<<endl;
+		}
+		string read;
+		if(!(fin>>read))
+			break;
+
+		for(int i=1;i<20;i++){
+			tree[i].cnt=0;
+		}
+
+		for(int j=0;j<readSize-kmerSize+1;j++){
+			string kmer=read.substr(j,kmerSize);
+			string minim = getMinimizer(kmer);
+			int nodeNumber = index[minim][kmer];
+			if(nodeNumber != 0){
+				tree[nodeNumber].cnt++;
+			}
+		}
+
+		//path to root
+		for(int j=18;j>=1;j--){
+			tree[j].cnt+=tree[tree[j].parent].cnt;
+		}
+
+		//find maximum
+		int maxim=-1;
+		for(int j=1;j<=10;j++){
+			if(tree[j].cnt>maxim)
+				maxim=tree[j].cnt;
+		}
+
+		int finalnode=-1;
+		for(int j=1;j<=10;j++){
+			if(tree[j].cnt==maxim){
+				if(finalnode==-1)
+					finalnode=j;
+				else
+					finalnode=LCA(finalnode,j);
+			}
+		}
+		readclass[read]=finalnode;
+	}
+}
+
+void calculateGenomePrecent(){
+	map<string, int >::iterator it = readclass.begin();
+	int sum = 0;
+	while(it!=readclass.end()){
+		sum++;
+		readcnt[it->second]++;
+		it++;
+	}
+	for(int j=18;j>=1;j++){
+		readcnt[j]+=readcnt[tree[j].parent];
+	}
+	for(int j=1;j<=10;j++){
+		sum+=readcnt[j];
+	}
+	for(int j=1;j<=10;j++){
+		precent[j]=(double)readcnt[j]/(double)sum;
 	}
 }
 
@@ -133,7 +205,12 @@ int main(){
 	//preprocess
 	buildTree();
 	makeIndex();
-	printIndex();
+	// printIndex();
+	readClassification();
+	calculateGenomePrecent();
+	for(int i=1;i<=10;i++){
+		cout<<"genome "<<i<<" precent is: "<<precent[i]<<endl;
+	}
 	cout<<"The End!";
 	return 0;
 }
